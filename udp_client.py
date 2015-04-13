@@ -43,10 +43,17 @@ class UdpClient:
               '"effect":"9",' \
               '"iswitch":"' + str(status) + '",' \
               '"matchValue":"0",' \
-              '"sn_list":[' \
-              '{"sn":"' + active_bulb + '"}' \
-              ']}'
+              '"sn_list":['
+        if type(active_bulb) != list :
+            active_bulb = [active_bulb]
+        count = 0
+        for bulb in active_bulb:
+            if count > 0:
+                cmd+=','
+            cmd += '{"sn":"' + bulb + '"}'
+            count += 1 
 
+        cmd += ']}'
         data = self.send_request(cmd)
 
     def set_title(self, sn, title):

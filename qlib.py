@@ -4,7 +4,7 @@ import sys
 import json
 
 try:
-	IP = socket.gethostbyname('bellnet')
+	IP = '192.168.1.1'#socket.gethostbyname('bellnet')
 	PORT = 11600
 except:
 	print 'Error', 'Could not find QStation!'
@@ -40,7 +40,7 @@ class UdpClient:
 			print('UDP Connection Error: ', sys.exc_info()[0])
 			raise
 
-	def set_light(self, *arguments):
+    def set_light(self, bright, red, green, blue, status, active_bulb):
 		cmd =	'{"cmd":"light_ctrl",' \
 				'"r":"' + str(red) + '",' \
 				'"g":"' + str(green) + '",' \
@@ -129,7 +129,7 @@ class QStation:
 	def get_bulbs(self):
 		self.output = self.udp_client.get_lights()
 		print self.output['led'][1]
-		self.bulbs = [Bulb(self.output['led'][i]) for i in range(len(self.output['led']))]
+		self.bulbs = [Bulb(self.output['led'][i],self.udp_client) for i in range(len(self.output['led']))]
 
 	def get_groups(self):
 		self.groups = self.udp_client.get_groups()
@@ -180,8 +180,9 @@ class Group:
 		self.udp_client.del_group(self.settings['group_id'])
 
 class Bulb:
-	def __init__(self, settings):
+	def __init__(self, settings, udp_client):
 		self.settings = settings
+		self.udp_client = udp_client
 
 	def switch(self, bright, angle):
 		self.udp_client.set_light([bright, angle])

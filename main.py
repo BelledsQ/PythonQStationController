@@ -201,7 +201,7 @@ class App:
                 # else:
                 #     status = 'Offline'
                 for n in range(len(self.groups['data'])):
-                self.bulb_treeview.insert('groups',
+                    self.bulb_treeview.insert('groups',
                                           'end',
                                           text=self.groups['data'][i]['group_title'],
                                           tag=i)
